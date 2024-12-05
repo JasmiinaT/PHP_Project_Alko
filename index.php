@@ -6,6 +6,9 @@ function setCookies() {
     // gets the selection from dropdown list
     let index = document.getElementById("country").selectedIndex;
     let selected = document.getElementById("country");
+    let typeIndex = document.getElementById("type").selectedIndex;
+    let typeSelected = document.getElementById("type");
+    // COUNTRY FILTER
     // if the first is selected... 
     if(index==0){
         document.cookie = "country= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"; //  --> cookie is deleted by setting it's value to "" and expries to somewhere in the past 
@@ -15,6 +18,14 @@ function setCookies() {
         document.cookie = "country="+selected.value; // cookie is set and no expiration --> it will expire when browser is closed
         window.location = "./index.php?page=0&country="+selected.value; // and the first paget is loaded with get params (because the cookie is not yet set until reloaded)
     }
+    // TYPE FILTER
+    // Type filter
+    if (typeIndex == 0) {
+        document.cookie = "type=; expires = Thu, 01 Jan 1970 00:00:00 GMT"; 
+    } else {
+        document.cookie = "type=" + typeSelected.value;
+    }
+
 }
 </script>
 <!DOCTYPE html>
@@ -48,6 +59,7 @@ function setCookies() {
         echo "<input type=button onClick=\"location.href='./index.php?page=".$nextpage.$country."'\" value='next'>";
         echo "<input type=button onClick=setCookies() value='set filter'";
         echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option><option value='Espanja'>Spain</option><option value='Suomi'>Finland</option></select></form>";
+        echo "<form><select name='type' id='type'><option value='sel'>--- select item type---</option><option value='Punaviinit'>Punaviinit</option><option value='Viskit'>Viskit</option></select></form>";
         // --- end of the ugly addition by Olli (this or similar should be in view according to MVC architecture) -------------------------
 
 
