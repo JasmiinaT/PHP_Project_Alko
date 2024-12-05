@@ -22,7 +22,7 @@ function readPriceList($filename) {
     $alkoData = [];
     
     if (($handle = fopen($filename, "r")) !== FALSE) {
-        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ";", '"', '\\')) !== FALSE) {
             if( $row === 0 ) {
                 // Alkon hinnasto xx.xx.xxxx                
                 $key = "Alkon hinnasto ";                
