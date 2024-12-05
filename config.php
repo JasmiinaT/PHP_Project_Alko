@@ -5,7 +5,7 @@ $filename = "data/alkon-hinnasto-ascii.csv";
 $filename_xlxs = "data/alkon-hinnasto.xlsx";
 $priceListDate = "14.09.2020";
 
-// define columns to include in the display
+// define columns that are displayed to the customer on the site
 $columns2Include = [
 "Numero",
 "Nimi",

@@ -1,5 +1,5 @@
 <?php
-
+/* Creating a table head element for  HTML table (includes columns) */
 function createColumnHeaders($columns2Include) {
     $t = "<thead>";
     $t = "<tr>";
@@ -10,7 +10,7 @@ function createColumnHeaders($columns2Include) {
     $t .= "</tr></thead>";    
     return $t;
 }
-
+/* Creating a row based on the item attributes */
 function createTableRow($product,$columns2Include,$columnNamesMap) {
     $t = "<tr>";
     for($i = 0; $i < count($columns2Include); $i++ ) {
@@ -38,6 +38,8 @@ function createTableRow($product,$columns2Include,$columnNamesMap) {
  *        $filters['PRICEHIGH'] price high limit
  * @return string html table 
  */
+
+/* Creating a HTML table for ALko's items */
 function createAlkoProductsTable($products, $columns2Include, $columnNamesMap, $filters, $tblId) {
     $limitCounter = 0;
     $limitCounterLow = $filters['LIMIT']*$filters['PAGE'];
@@ -90,6 +92,7 @@ function createAlkoProductsTable($products, $columns2Include, $columnNamesMap, $
     $t .= "</table>";
     return $t;
 }
+
 
 function generateView($alkoData, $filters, $tblId=null) {
     global $columns2Include, $columnNamesMap;

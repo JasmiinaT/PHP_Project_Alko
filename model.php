@@ -6,7 +6,7 @@ require_once("controller.php");
 
 // setLocale(LC_ALL, 'fi_FI:UTF-8');
 $cs = ini_get("default_charset");
-ini_set("auto_detect_line_endings", true);
+// ini_set("auto_detect_line_endings", true);
 
 // vars
 $columnNames = [];
