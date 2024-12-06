@@ -77,12 +77,7 @@ function createAlkoProductsTable($products, $columns2Include, $columnNamesMap, $
                 continue;
             }
         }
-        
-        if ($filters['TYPE'] != null) {
-            if ($product[$columnNamesMap['Tyyppi']] !== $filters['TYPE']) {
-                continue;
-            }
-        }
+
         
         
         // limit items to include into table

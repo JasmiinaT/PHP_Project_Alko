@@ -45,10 +45,44 @@ function setTypeFilter() {
     </head>
     <body>
         <?php
+        // index.php
+
+        // Include the database initialization
+        require_once("db_initialize.php");
+
+        // Get filters from cookies (if set)
+        $countryFilter = isset($_COOKIE['country']) ? $_COOKIE['country'] : '';
+        $typeFilter = isset($_COOKIE['type']) ? $_COOKIE['type'] : '';
+
+        // Define the base query
+        $query = "SELECT * FROM alko_price_list300";
+
+        // Add filtering logic if country or type is set
+        if ($countryFilter) {
+            $query .= " WHERE Valmistusmaa = '$countryFilter'"; // Adjust the column name if necessary
+        }
+
+        if ($typeFilter) {
+            // If there was already a WHERE clause, use AND, otherwise use WHERE
+            $query .= ($countryFilter ? " AND " : " WHERE ") . "Tyyppi = '$typeFilter'"; // Adjust the column name
+        }
+
+        // Execute the query
+        $result = $conn->query($query);
+
+        // Fetch data if there are results
+        if ($result->num_rows > 0) {
+            $alkoData = $result->fetch_all(MYSQLI_ASSOC);
+        } else {
+            $alkoData = [];
+        }
+
+
         //require("urlHandler.php");
         //require("handlePriceList.php");
         require("model.php");
-        require_once("controller.php");
+        // require_once("controller.php");
+        // require_once("db_initialize.php");
         $alkoData = initModel();
         $filters = handleRequest();
         $alkoProductTable = generateView($alkoData, $filters, 'products');
@@ -72,7 +106,6 @@ function setTypeFilter() {
         echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option><option value='Espanja'>Spain</option><option value='Suomi'>Finland</option></select></form>";
         echo "<input type=button onClick=setTypeFilter() value='set type filter'";
         echo "<form><select name='type' id='type'><option value='sel'>--- select item type---</option><option value='punaviinit'>Punaviinit</option><option value='viskit'>Viskit</option></select></form>";
-        // --- end of the ugly addition by Olli (this or similar should be in view according to MVC architecture) -------------------------
 
 
         // display products table here
