@@ -55,7 +55,7 @@ function setTypeFilter() {
         $typeFilter = isset($_COOKIE['type']) ? $_COOKIE['type'] : '';
 
         // Define the base query
-        $query = "SELECT * FROM alko_price_list300";
+        $query = "SELECT * FROM alko_price_list";
 
         // Add filtering logic if country or type is set
         if ($countryFilter) {
