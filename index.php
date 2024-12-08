@@ -45,9 +45,7 @@ function setTypeFilter() {
     </head>
     <body>
         <?php
-        // index.php
 
-        // Include the database initialization
         require_once("db_initialize.php");
 
         // Get filters from cookies (if set)
@@ -59,60 +57,52 @@ function setTypeFilter() {
 
         // Add filtering logic if country or type is set
         if ($countryFilter) {
-            $query .= " WHERE Valmistusmaa = '$countryFilter'"; // Adjust the column name if necessary
+            $query .= " WHERE Valmistusmaa = '$countryFilter'";
         }
 
         if ($typeFilter) {
-            // If there was already a WHERE clause, use AND, otherwise use WHERE
-            $query .= ($countryFilter ? " AND " : " WHERE ") . "Tyyppi = '$typeFilter'"; // Adjust the column name
+            $query .= ($countryFilter ? " AND " : " WHERE ") . "Tyyppi = '$typeFilter'";
         }
 
         // Execute the query
         $result = $conn->query($query);
+        $alkoData = $result->fetchAll(PDO::FETCH_ASSOC); // Fetch data as associative array
 
-        // Fetch data if there are results
-        if ($result->num_rows > 0) {
-            $alkoData = $result->fetch_all(MYSQLI_ASSOC);
-        } else {
-            $alkoData = [];
+        $rowsFound = count($alkoData);
+        echo "<div id=\"tbl-header\" class=\"alert alert-success\" role=\"\">Alkon hinnasto (Total items $rowsFound)</div>";
+
+        // Function to generate table view
+        function generateView($data, $filters, $tableName) {
+            if (empty($data)) {
+                return "<p>No data found matching the current filters.</p>";
+            }
+
+            // Start the table
+            $html = "<table class='table table-striped'>";
+            $html .= "<thead><tr>";
+
+            // Table headers
+            $headers = array_keys($data[0]);
+            foreach ($headers as $header) {
+                $html .= "<th>" . htmlspecialchars($header) . "</th>";
+            }
+            $html .= "</tr></thead><tbody>";
+
+            // Table rows
+            foreach ($data as $row) {
+                $html .= "<tr>";
+                foreach ($row as $value) {
+                    $html .= "<td>" . htmlspecialchars($value) . "</td>";
+                }
+                $html .= "</tr>";
+            }
+
+            $html .= "</tbody></table>";
+            return $html;
         }
 
-
-        //require("urlHandler.php");
-        //require("handlePriceList.php");
-        require("model.php");
-        // require_once("controller.php");
-        // require_once("db_initialize.php");
-        $alkoData = initModel();
-        $filters = handleRequest();
-        $alkoProductTable = generateView($alkoData, $filters, 'products');
-        
-        $rowsFound = count($alkoData);
-        // echo "<h1>Alkon hinnasto $priceListDate Total rows found $rowsFound</h1>";
-        echo "<div id=\"tbl-header\" class=\"alert alert-success\" role=\"\">Alkon hinnasto $priceListDate (Total items $rowsFound)</div>";
-
-        // --- this is the ugly addition by Olli (this or similar should be in view according to MVC architecture) ------------------------
-        $currpage = isset($filters['PAGE']) ? $filters['PAGE'] : 0;
-        $prevpage = $currpage > $filters['LIMIT'] ? $currpage-$filters['LIMIT'] : 0; // previous page (0 is the minimum)
-        $nextpage = $currpage+$filters['LIMIT'];    // next page (no max checked ;) )
-        $country = isset($_COOKIE['country']) ? "&country=".$_COOKIE['country'] : "";
-        $type = isset($_COOKIE['type']) ? "&type=".$_COOKIE['type'] : "";
-        // Combine filters
-        $filters = $country . $type;
-
-        echo "<input type=button onClick=\"location.href='./index.php?page=" . $prevpage . $filters . "'\" value='prev'>";
-        echo "<input type=button onClick=\"location.href='./index.php?page=" . $nextpage . $filters . "'\" value='next'>";
-        echo "<input type=button onClick=setCountryFilter() value='set country filter'";
-        echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option><option value='Espanja'>Spain</option><option value='Suomi'>Finland</option></select></form>";
-        echo "<input type=button onClick=setTypeFilter() value='set type filter'";
-        echo "<form><select name='type' id='type'><option value='sel'>--- select item type---</option><option value='punaviinit'>Punaviinit</option><option value='viskit'>Viskit</option></select></form>";
-
-
-        // display products table here
-        echo $alkoProductTable;
-   
-        //testXlxs();
-        //fetchXlxs($remote_filename_xlsl, $local_filename_xlsl);
-        ?>
+        // Display the table
+        echo generateView($alkoData, [], 'products');
+?>
     </body>
 </html>
