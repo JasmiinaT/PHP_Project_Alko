@@ -3,6 +3,7 @@
 require_once("config.php");
 require_once("view.php");
 require_once("controller.php");
+require_once("db_initialize.php");
 
 // setLocale(LC_ALL, 'fi_FI:UTF-8');
 $cs = ini_get("default_charset");

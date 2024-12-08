@@ -56,13 +56,19 @@ function setVolumeFilter() {
         <title>Alkon hinnasto</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link rel="stylesheet" href="styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap" rel="stylesheet">
     </head>
     <body>
+        <h1>- Alko Hinnasto -</h1>
+        <h3>By Jasmiina Tauriainen, Adelaine Herranen, Valtteri Lankinen, Miko Kosola</h3>
         <?php
         //require("urlHandler.php");
         //require("handlePriceList.php");
         require("model.php");
         require_once("controller.php");
+        require_once("db_initialize.php");
         $alkoData = initModel();
         $filters = handleRequest();
         $alkoProductTable = generateView($alkoData, $filters, 'products');
@@ -93,7 +99,7 @@ function setVolumeFilter() {
         echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option>
         <option value='Espanja'>Spain</option>
         <option value='Suomi'>Finland</option>
-        <option value='Argentina'>Argetina</option>
+        <option value='Argentiina'>Argetiina</option>
         <option value='Australia'>Australia</option>
         <option value='Italia'>Italia</option>
         </select></form>";
@@ -110,9 +116,6 @@ function setVolumeFilter() {
         <option value='konjakit'>Konjakit</option>
         <option value='siiderit'>Siiderit</option>
         <option value='alkoholittomat'>Alkoholittomat</option>
-        <option value='kuohuviinit ja samppanjat'>Kuohuviinit ja samppanjat</option>
-        <option value='hanapakkaukset'>Hanapakkaukset</option>
-        <option value='jälkiruokaviinit, väkevöidyt ja muut viinit'>Jälkiruokaviinit, väkevöidyt ja muut viinit</option>
         </select></form>";
 
         // Volume input
