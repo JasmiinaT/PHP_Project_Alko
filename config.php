@@ -11,12 +11,12 @@ $username = "Group7";  // Your database username
 $password = "Koodaus1";  // Your database password
 $dbname = "alko_db"; 
 
-$conn = null;
+$pdo = null;
 
 try {
     // create database
-    $conn = new PDO("mysql:host=$servername", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO("mysql:host=$servername", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // $conn->exec($sql);  // Execute the SQL to create the database
     // echo "<p>Database created successfully</p>";
     } catch (PDOException $e) {
