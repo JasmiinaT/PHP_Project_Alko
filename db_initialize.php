@@ -4,8 +4,8 @@ require_once('config.php');
 // CREATE DATABASE CONNECTION
 function create_db_connection() {
     $servername = "localhost";
-    $username = "root";  // Your database username
-    $password = "";      // Your database password
+    $username = "Group7";  // Your database username
+    $password = "Koodaus1";      // Your database password
     $dbname = "alko_db";
 
     try {

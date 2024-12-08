@@ -7,8 +7,8 @@ $priceListDate = "14.09.2020";
 
 // CREATING A DATABASE
 $servername = "localhost";
-$username = "root";  // Your database username
-$password = "";  // Your database password
+$username = "Group7";  // Your database username
+$password = "Koodaus1";  // Your database password
 $dbname = "alko_db"; 
 
 $conn = null;
