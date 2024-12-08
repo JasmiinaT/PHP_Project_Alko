@@ -64,4 +64,4 @@ $columns2Include = [
  * Energia kcal/100 ml;
  * Valikoima;
  * EAN
- */
+ */ 

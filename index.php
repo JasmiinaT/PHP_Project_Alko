@@ -1,108 +1,130 @@
 <script>
-// a js addition by Olli who sets cookie(s) by drop down list if 'set filter' button is pressed
-// if the first is selected it will delete the cookie(s)
-// (js solution because it may not be possible to read such values in php without posting?)
+// JavaScript to set cookies for filters and reload the page
 function setCountryFilter() {
-    // gets the selection from dropdown list
-    let index = document.getElementById("country").selectedIndex;
     let selected = document.getElementById("country");
-
-    // COUNTRY FILTER
-    // if the first is selected... 
-    if(index==0){
-        document.cookie = "country= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"; //  --> cookie is deleted by setting it's value to "" and expries to somewhere in the past 
-        window.location = "./index.php?page=0"; // and the page is reloaded to the first page
-    // otherwise...
-    }else{
-        document.cookie = "country="+selected.value; // cookie is set and no expiration --> it will expire when browser is closed
-        window.location = "./index.php?page=0&country="+selected.value; // and the first paget is loaded with get params (because the cookie is not yet set until reloaded)
+    if (selected.selectedIndex == 0) {
+        document.cookie = "country=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        window.location = "./index.php?page=0";
+    } else {
+        document.cookie = "country=" + selected.value;
+        window.location = "./index.php?page=0&country=" + selected.value;
     }
-
 }
-function setTypeFilter() {
-    // gets the selection from dropdown list
-    let index = document.getElementById("type").selectedIndex;
-    let selected = document.getElementById("type");
 
-    // TYPE FILTER
-    if (index == 0) {
-        document.cookie = "type=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
-        window.location = "./index.php?page=0"; // and the page is reloaded to the first page 
+function setTypeFilter() {
+    let selected = document.getElementById("type");
+    if (selected.selectedIndex == 0) {
+        document.cookie = "type=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        window.location = "./index.php?page=0";
     } else {
         document.cookie = "type=" + selected.value;
-        window.location = "./index.php?page=0&type="+selected.value; // and the first paget is loaded with get params (because the cookie is not yet set until reloaded)
+        window.location = "./index.php?page=0&type=" + selected.value;
     }
+}
 
+function setVolumeFilter() {
+    let selected = document.getElementById("volume");
+    if (selected.selectedIndex == 0) {
+        document.cookie = "volume=; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        window.location = "./index.php?page=0";
+    } else {
+        document.cookie = "volume=" + selected.value;
+        window.location = "./index.php?page=0&volume=" + selected.value;
+    }
 }
 </script>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta charset="UTF-8">
         <title>Alkon hinnasto</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="styles.css">
     </head>
     <body>
         <?php
-
+        require_once("model.php");
         require_once("db_initialize.php");
+        require_once("controller.php");
 
-        // Get filters from cookies (if set)
-        $countryFilter = isset($_COOKIE['country']) ? $_COOKIE['country'] : '';
-        $typeFilter = isset($_COOKIE['type']) ? $_COOKIE['type'] : '';
-
-        // Define the base query
-        $query = "SELECT * FROM alko_price_list";
-
-        // Add filtering logic if country or type is set
-        if ($countryFilter) {
-            $query .= " WHERE Valmistusmaa = '$countryFilter'";
+        $products = fetchProducts();
+        if (count($products) > 0) {
+            echo "Number of products: " . count($products);
+        } else {
+            echo "No products available to count.";
         }
+        // Handle request and get filtered data
+        $filters = handleRequest();
+        $alkoData = initModel($filters);
+        $alkoProductTable = generateView($alkoData, $filters, 'products');
 
-        if ($typeFilter) {
-            $query .= ($countryFilter ? " AND " : " WHERE ") . "Tyyppi = '$typeFilter'";
-        }
+        // Pagination logic
+        $currpage = isset($_GET['page']) ? (int)$_GET['page'] : 0;
+        $prevpage = $currpage > 0 ? $currpage - 1 : 0;
+        $nextpage = $currpage + 1;
 
-        // Execute the query
-        $result = $conn->query($query);
-        $alkoData = $result->fetchAll(PDO::FETCH_ASSOC); // Fetch data as associative array
+        $country = isset($_COOKIE['country']) ? "&country=" . $_COOKIE['country'] : "";
+        $type = isset($_COOKIE['type']) ? "&type=" . $_COOKIE['type'] : "";
+        $volume = isset($_COOKIE['volume']) ? "&volume=" . $_COOKIE['volume'] : "";
 
-        $rowsFound = count($alkoData);
-        echo "<div id=\"tbl-header\" class=\"alert alert-success\" role=\"\">Alkon hinnasto (Total items $rowsFound)</div>";
+        $filtersUrl = $country . $type . $volume;
 
-        // Function to generate table view
-        function generateView($data, $filters, $tableName) {
-            if (empty($data)) {
-                return "<p>No data found matching the current filters.</p>";
-            }
+        // Header
+        echo "<div id=\"tbl-header\" class=\"alert alert-success\" role=\"alert\">Alkon hinnasto (Total items: " . count($alkoData) . ")</div>";
 
-            // Start the table
-            $html = "<table class='table table-striped'>";
-            $html .= "<thead><tr>";
+        // Navigation buttons
+        echo "<div class='container mb-3'>";
+        echo "<input type='button' class='btn btn-primary' onClick=\"location.href='./index.php?page=" . $prevpage . $filtersUrl . "'\" value='Previous'>";
+        echo "<input type='button' class='btn btn-primary ml-2' onClick=\"location.href='./index.php?page=" . $nextpage . $filtersUrl . "'\" value='Next'>";
+        echo "</div>";
 
-            // Table headers
-            $headers = array_keys($data[0]);
-            foreach ($headers as $header) {
-                $html .= "<th>" . htmlspecialchars($header) . "</th>";
-            }
-            $html .= "</tr></thead><tbody>";
+        // Filter dropdowns
+        echo "<div class='container mb-3'>";
+        echo "<form>";
+        echo "<select class='form-control mb-2' id='country'><option value=''>--- Select Country ---</option>
+              <option value='Espanja'>Spain</option>
+              <option value='Suomi'>Finland</option>
+              </select>";
+        echo "<input type='button' class='btn btn-success mb-2' onClick='setCountryFilter()' value='Set Country Filter'>";
 
-            // Table rows
-            foreach ($data as $row) {
-                $html .= "<tr>";
-                foreach ($row as $value) {
-                    $html .= "<td>" . htmlspecialchars($value) . "</td>";
-                }
-                $html .= "</tr>";
-            }
+        echo "<select class='form-control mb-2' id='type'><option value=''>--- Select Item Type ---</option>
+              <option value='punaviinit'>Punaviinit</option>
+              <option value='viskit'>Viskit</option>
+              <option value='roseeviinit'>Roseeviinit</option>
+              </select>";
+        echo "<input type='button' class='btn btn-success mb-2' onClick='setTypeFilter()' value='Set Type Filter'>";
 
-            $html .= "</tbody></table>";
-            return $html;
-        }
+        echo "<select class='form-control mb-2' id='volume'><option value=''>--- Select Volume ---</option>
+              <option value='0,75 l'>0,75 l</option>
+              <option value='1 l'>1 l</option>
+              </select>";
+        echo "<input type='button' class='btn btn-success mb-2' onClick='setVolumeFilter()' value='Set Volume Filter'>";
+        echo "</form>";
+        echo "</div>";
 
-        // Display the table
-        echo generateView($alkoData, [], 'products');
-?>
+        // Display product table
+        echo $alkoProductTable;
+
+        // Pagination logic (at the bottom of the file)
+        $currpage = isset($_GET['page']) ? (int)$_GET['page'] : 0;
+        $prevpage = $currpage > 0 ? $currpage - 1 : 0;
+        $nextpage = $currpage + 1;
+
+        $country = isset($_COOKIE['country']) ? "&country=" . $_COOKIE['country'] : "";
+        $type = isset($_COOKIE['type']) ? "&type=" . $_COOKIE['type'] : "";
+        $volume = isset($_COOKIE['volume']) ? "&volume=" . $_COOKIE['volume'] : "";
+
+        $filtersUrl = $country . $type . $volume;
+
+        // Header
+        echo "<div id=\"tbl-header\" class=\"alert alert-success\" role=\"alert\">Alkon hinnasto (Total items: " . count($alkoData) . ")</div>";
+
+        // Navigation buttons
+        echo "<div class='container mb-3'>";
+        echo "<input type='button' class='btn btn-primary' onClick=\"location.href='./index.php?page=" . $prevpage . $filtersUrl . "'\" value='Previous'>";
+        echo "<input type='button' class='btn btn-primary ml-2' onClick=\"location.href='./index.php?page=" . $nextpage . $filtersUrl . "'\" value='Next'>";
+        echo "</div>";
+        ?>
     </body>
 </html>
