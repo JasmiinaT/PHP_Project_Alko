@@ -81,20 +81,52 @@ function setVolumeFilter() {
         // Combine filters
         $filters = $country . $type . $volume;
         
+        // Naviagtion
+
         echo "<input type=button onClick=\"location.href='./index.php?page=" . $prevpage . $filters . "'\" value='prev'>";
         echo "<input type=button onClick=\"location.href='./index.php?page=" . $nextpage . $filters . "'\" value='next'>";
 
-        echo "<input type=button onClick=setCountryFilter() value='set country filter' $currfilters+";
+        // Country input
+
+        echo "<input type=button onClick=setCountryFilter() value='set country filter'";
         
-        echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option><option value='Espanja'>Spain</option><option value='Suomi'>Finland</option></select></form>";
+        echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option>
+        <option value='Espanja'>Spain</option>
+        <option value='Suomi'>Finland</option>
+        <option value='Argentina'>Argetina</option>
+        <option value='Australia'>Australia</option>
+        <option value='Italia'>Italia</option>
+        </select></form>";
+
+        // Type input
 
         echo "<input type=button onClick=setTypeFilter() value='set type filter'";
         
-        echo "<form><select name='type' id='type'><option value='sel'>--- select item type---</option><option value='punaviinit'>Punaviinit</option><option value='viskit'>Viskit</option><option value='roseeviinit'>Roseeviinit</option><option value='valkoviinit'>Valkoviinit</option><option value='viinijuomat'>Viinijuomat</option><option value='rommit'>Rommit</option><option value='konjakit'>Konjakit</option><option value='oluet'>Oluet</option><option value='siiderit'>Siiderit</option><option value='juomasekoitukset'>juomasekoitukset</option><option value='alkoholittomat'>Alkoholittomat</option><option value='lahja- ja juomatarvikkeet'>Lahja- ja juomatarvikkeet</option><option value='kuohuviinit ja samppanjat'>Kuohuviinit ja samppanjat</option><option value='hanapakkaukset'>Hanapakkaukset</option><option value='jälkiruokaviinit, väkevöidyt ja muut viinit'>Jälkiruokaviinit, väkevöidyt ja muut viinit</option></select></form>";
+        echo "<form><select name='type' id='type'><option value='sel'>--- select item type---</option>
+        <option value='punaviinit'>Punaviinit</option>
+        <option value='viskit'>Viskit</option>
+        <option value='valkoviinit'>Valkoviinit</option>
+        <option value='rommit'>Rommit</option>
+        <option value='konjakit'>Konjakit</option>
+        <option value='siiderit'>Siiderit</option>
+        <option value='alkoholittomat'>Alkoholittomat</option>
+        <option value='kuohuviinit ja samppanjat'>Kuohuviinit ja samppanjat</option>
+        <option value='hanapakkaukset'>Hanapakkaukset</option>
+        <option value='jälkiruokaviinit, väkevöidyt ja muut viinit'>Jälkiruokaviinit, väkevöidyt ja muut viinit</option>
+        </select></form>";
+
+        // Volume input
 
         echo "<input type=button onClick=setVolumeFilter() value='set volume filter'";
 
-        echo "<form><select name='volume' id='volume'><option value='sel'>--- selected item volume---</option><option value='0,75 l'>0,75 l</option><option value='1 l'>1 l</option></select></form>";
+        echo "<form><select name='volume' id='volume'><option value='sel'>--- selected item volume---</option>
+        <option value='0,75 l'>0,75 l</option>
+        <option value='1 l'>1 l</option>
+        <option value='1,5 l'>1,5 l</option>
+        <option value='3 l'>3 l</option>
+        <option value='5 l'>5 l</option>
+        <option value='15 l'>15 l</option>
+        </select></form>";
         // --- end of the ugly addition by Olli (this or similar should be in view according to MVC architecture) -------------------------
 
 
