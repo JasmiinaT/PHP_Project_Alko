@@ -83,6 +83,12 @@ function createAlkoProductsTable($products, $columns2Include, $columnNamesMap, $
                 continue;
             }
         }
+
+        if ($filters['VOLUME'] != null) {
+            if ($product[$columnNamesMap['Pullokoko']] !== $filters['VOLUME']) {
+                continue;
+            }
+        }
         
         
         // limit items to include into table

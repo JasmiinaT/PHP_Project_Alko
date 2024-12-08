@@ -10,6 +10,9 @@ function handleRequest() {
     $filters['COUNTRY'] = $_GET['country'] ?? null;
     $filters['PRICELOW'] = $_GET['priceLow'] ?? null;
     $filters['PRICEHIGH'] = $_GET['priceHigh'] ?? null;
+    $filters['VOLUME'] = $_GET['volume'] ?? null;
     
     return $filters;    
 }
+
+
