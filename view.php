@@ -36,6 +36,7 @@ function createTableRow($product,$columns2Include,$columnNamesMap) {
  *        $filters['COUNTRY'] product country
  *        $filters['PRICELOW'] price low limit
  *        $filters['PRICEHIGH'] price high limit
+ *        $filters['VOLUME'] product volume
  * @return string html table 
  */
 

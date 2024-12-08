@@ -41,7 +41,7 @@ function setVolumeFilter() {
 
     // VOLUME FILTER
     if(index == 0) {
-        document.cookie = "type=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "volume=; expires = Thu, 01 Jan 1970 00:00:00 GMT";
         window.location = "./index.php?page=0"; // and the page is reloaded to the first page
     } else {
         document.cookie = "volume=" + selected.value;
@@ -73,24 +73,27 @@ function setVolumeFilter() {
 
         // --- this is the ugly addition by Olli (this or similar should be in view according to MVC architecture) ------------------------
         $currpage = isset($filters['PAGE']) ? $filters['PAGE'] : 0;
-        $prevpage = $currpage > $filters['LIMIT'] ? $currpage-$filters['LIMIT'] : 0; // previous page (0 is the minimum)
-        $nextpage = $currpage+$filters['LIMIT'];    // next page (no max checked ;) )
+        $prevpage = $currpage > 0 ? $currpage - 1 : 0; // previous page (0 is the minimum)
+        $nextpage = $currpage + 1 ;   // next page (no max checked ;) )
         $country = isset($_COOKIE['country']) ? "&country=".$_COOKIE['country'] : "";
         $type = isset($_COOKIE['type']) ? "&type=".$_COOKIE['type'] : "";
         $volume = isset($_COOKIE['volume']) ? "&volume=".$_COOKIE['volume'] : "";
         // Combine filters
         $filters = $country . $type . $volume;
-
+        
         echo "<input type=button onClick=\"location.href='./index.php?page=" . $prevpage . $filters . "'\" value='prev'>";
         echo "<input type=button onClick=\"location.href='./index.php?page=" . $nextpage . $filters . "'\" value='next'>";
-        echo "<input type=button onClick=setCountryFilter() value='set country filter'";
+
+        echo "<input type=button onClick=setCountryFilter() value='set country filter' $currfilters+";
         
         echo "<form><select name='country' id='country'><option value='sel'>--- select country ---</option><option value='Espanja'>Spain</option><option value='Suomi'>Finland</option></select></form>";
+
         echo "<input type=button onClick=setTypeFilter() value='set type filter'";
         
         echo "<form><select name='type' id='type'><option value='sel'>--- select item type---</option><option value='punaviinit'>Punaviinit</option><option value='viskit'>Viskit</option><option value='roseeviinit'>Roseeviinit</option><option value='valkoviinit'>Valkoviinit</option><option value='viinijuomat'>Viinijuomat</option><option value='rommit'>Rommit</option><option value='konjakit'>Konjakit</option><option value='oluet'>Oluet</option><option value='siiderit'>Siiderit</option><option value='juomasekoitukset'>juomasekoitukset</option><option value='alkoholittomat'>Alkoholittomat</option><option value='lahja- ja juomatarvikkeet'>Lahja- ja juomatarvikkeet</option><option value='kuohuviinit ja samppanjat'>Kuohuviinit ja samppanjat</option><option value='hanapakkaukset'>Hanapakkaukset</option><option value='jälkiruokaviinit, väkevöidyt ja muut viinit'>Jälkiruokaviinit, väkevöidyt ja muut viinit</option></select></form>";
 
         echo "<input type=button onClick=setVolumeFilter() value='set volume filter'";
+
         echo "<form><select name='volume' id='volume'><option value='sel'>--- selected item volume---</option><option value='0,75 l'>0,75 l</option><option value='1 l'>1 l</option></select></form>";
         // --- end of the ugly addition by Olli (this or similar should be in view according to MVC architecture) -------------------------
 

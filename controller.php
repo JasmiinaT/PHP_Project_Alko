@@ -5,7 +5,7 @@
 function handleRequest() {
     $filters['MODE'] = $_GET['mode'] ?? 'view';
     $filters['TYPE'] = $_GET['type'] ?? null;
-    $filters['LIMIT'] = $_GET['limit'] ?? 20;
+    $filters['LIMIT'] = $_GET['limit'] ?? 25;
     $filters['PAGE'] = $_GET['page'] ?? 0;
     $filters['COUNTRY'] = $_GET['country'] ?? null;
     $filters['PRICELOW'] = $_GET['priceLow'] ?? null;

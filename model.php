@@ -11,7 +11,7 @@ $cs = ini_get("default_charset");
 // vars
 $columnNames = [];
 $columnNamesMap = [];
-$alkoData = [];
+$alkoData = []; 
 
 function readPriceList($filename) {
     // return values as global data
